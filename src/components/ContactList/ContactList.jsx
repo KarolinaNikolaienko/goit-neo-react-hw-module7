@@ -1,32 +1,40 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Contact from '../Contact/Contact';
 import css from './ContactList.module.css';
-import { selectContacts } from '../../redux/contactsSlice';
-import { selectNameFilter } from '../../redux/filtersSlice';
+import {
+  selectError,
+  selectFilteredContacts,
+  selectIsLoading,
+} from '../../redux/contacts/contactsSlice';
+import { useEffect } from 'react';
+import { fetchContacts } from '../../redux/contacts/contactsOps';
 
 const ContactList = () => {
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectNameFilter);
+  const contacts = useSelector(selectFilteredContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
 
-  const searchedContacts = contacts.filter(contact => {
-    return (
-      contact.name.toLowerCase().includes(filter.toLowerCase()) ||
-      contact.number.toLowerCase().includes(filter.toLowerCase())
-    );
-  });
+  const dispatch = useDispatch();
 
-  if (searchedContacts && searchedContacts.length > 0)
-    return (
-      <>
+  useEffect(() => {
+    dispatch(fetchContacts());
+  }, [dispatch]);
+
+  return (
+    <>
+      {isLoading && <p>Loading...</p>}
+      {error && <p>Oops... Something went wrong</p>}
+      {contacts && contacts.length > 0 && (
         <ul className={css.contactList}>
-          {searchedContacts.map(contact => (
+          {contacts.map(contact => (
             <li key={contact.id}>
               <Contact contact={contact} />
             </li>
           ))}
         </ul>
-      </>
-    );
+      )}
+    </>
+  );
 };
 
 export default ContactList;
