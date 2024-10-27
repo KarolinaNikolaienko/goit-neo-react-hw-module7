@@ -3,3 +3,13 @@
     flex-wrap: wrap;
     gap: 10px;
 }
+
+.error {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.errorMsg {
+    font-size: 14px;
+    color: #757575;
+}

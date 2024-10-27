@@ -29,22 +29,22 @@ const contactsSlice = createSlice({
       .addMatcher(
         action => action.type.endsWith('/fulfilled'),
         state => {
-          state.isLoading = false;
-          state.error = false;
+          state.contacts.isLoading = false;
+          state.contacts.error = false;
         }
       )
       .addMatcher(
         action => action.type.endsWith('/pending'),
         state => {
-          state.isLoading = true;
-          state.error = false;
+          state.contacts.isLoading = true;
+          state.contacts.error = false;
         }
       )
       .addMatcher(
         action => action.type.endsWith('/rejected'),
-        state => {
-          state.isLoading = false;
-          state.error = true;
+        (state, { payload }) => {
+          state.contacts.isLoading = false;
+          state.contacts.error = payload;
         }
       );
   },

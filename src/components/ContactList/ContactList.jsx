@@ -1,4 +1,4 @@
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import Contact from '../Contact/Contact';
 import css from './ContactList.module.css';
 import {
@@ -6,24 +6,21 @@ import {
   selectFilteredContacts,
   selectIsLoading,
 } from '../../redux/contacts/contactsSlice';
-import { useEffect } from 'react';
-import { fetchContacts } from '../../redux/contacts/contactsOps';
 
 const ContactList = () => {
   const contacts = useSelector(selectFilteredContacts);
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
 
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(fetchContacts());
-  }, [dispatch]);
-
   return (
     <>
       {isLoading && <p>Loading...</p>}
-      {error && <p>Oops... Something went wrong</p>}
+      {error && (
+        <div className={css.error}>
+          <p>Oops... Something went wrong</p>
+          <p className={css.errorMsg}>{error}</p>
+        </div>
+      )}
       {contacts && contacts.length > 0 && (
         <ul className={css.contactList}>
           {contacts.map(contact => (
